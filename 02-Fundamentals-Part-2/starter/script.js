@@ -285,4 +285,103 @@ const daniel = {
 
 console.log(daniel.getSummary());
 
+// 46- Iterations For Loop
+
+for(let index = 1; index <= 10; index++){
+    console.log('Lift wheights ' + index);
+}
+
+// 47- Looping arrays, breaking and continuing
+
+const daniel = [
+    'daniel', 
+    'bianco', 
+    2037 - 1984, 
+    'devops', 
+    ['steven', 'peter', 'michael'],
+    true
+];
+
+const types = [];
+
+for (let i = 0; i < daniel.length; i++){
+    // Reading from the array
+    console.log(daniel[i], typeof(daniel[i]));
+
+    // Writing the array
+    //types[i] = typeof(daniel[i]);
+    types.push(daniel[i]);
+}
+
+console.log(types);
+
+const year = [1992, 1998, 2003, 1984];
+const ages = []
+
+for (let i = 0; i < year.length; i++){
+    ages.push(2037 - year[i]);
+}
+
+console.log(ages);
+
+// continue and break
+console.log('---print only strings continue---')
+for (let i = 0; i < daniel.length; i++){
+    // Reading from the array
+    if(typeof(daniel[i]) !== 'string') continue;
+    console.log(daniel[i], typeof(daniel[i]));
+}
+
+console.log('---print only strings break---')
+for (let i = 0; i < daniel.length; i++){
+    // Reading from the array
+    if(typeof(daniel[i]) === 'number') break;
+    console.log(daniel[i], typeof(daniel[i]));
+}
+
+// 48- Loop backwards, loops in loops
+
+const daniel = [
+    'daniel', 
+    'bianco', 
+    2037 - 1984, 
+    'devops', 
+    ['steven', 'peter', 'michael'],
+    true
+];
+
+for (let i = daniel.length - 1; i >= 0; i--){
+    console.log(i, daniel[i]);
+}
+
+for (let i = 1; i < 4; i++){
+    console.log(`--- Starting Exercise ${i} ---`);
+    for (let x = 1; x < 6; x++){
+        console.log(`--- Repetition ${x} ---`);
+    }
+}
+
+
+
+// 49- While
+
+// for(let index = 1; index <= 10; index++){
+//     console.log('Lift wheights for: ' + index);
+// }
+
+let index = 1;
+while (index <= 10){
+    // console.log('Lift wheights while: ' + index);
+    index++;
+}
+
+let dice = Math.trunc(Math.random() * 6) + 1;
+console.log(`You rolled a ${dice}`);
+
+while (dice !== 6){
+    console.log(`You rolled a ${dice}`);
+    dice = Math.trunc(Math.random() * 6) + 1;
+    if (dice === 6) console.log('You rolled a 6 - GETTING OUT')
+}
+
 */
