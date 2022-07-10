@@ -168,4 +168,12 @@ guille.age = 36;
 
 console.log(daniel, guille); // guille its not a new object but a link to the original object
 
+// guille = {}; its not possible to change, because guille was generated with const
+
+const ari = Object.assign({}, daniel); // this is a shallow copy, it will copy the first level. if there is another object inside will point to the same heap space
+ari.age = 34;
+ari.firstName = 'Ari';
+
+console.log(daniel, ari);
+
 */
