@@ -4,6 +4,23 @@
 const flights =
   '_Delayed_Departure;fao93766109;txl2133758440;11:25+_Arrival;bru0943384722;fao93766109;11:45+_Delayed_Arrival;hel7439299980;fao93766109;12:05+_Departure;fao93766109;lis2323639855;12:30';
 
+const weekdays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+const openingHours = {
+  [weekdays[3]]: {
+    open: 12,
+    close: 22,
+  },
+  [weekdays[4]]: {
+    open: 11,
+    close: 23,
+  },
+  [weekdays[5]]: {
+    open: 0, // Open 24 hours
+    close: 24,
+  },
+};
+
 // Data needed for first part of the section
 const restaurant = {
   name: 'Classico Italiano',
@@ -16,20 +33,11 @@ const restaurant = {
     return [this.starterMenu[starterIndex], this.mainMenu[mainIndex]];
   },
 
-  openingHours: {
-    thu: {
-      open: 12,
-      close: 22,
-    },
-    fri: {
-      open: 11,
-      close: 23,
-    },
-    sat: {
-      open: 0, // Open 24 hours
-      close: 24,
-    },
-  },
+  // Old way, both have the same name.
+  // openingHours: openingHours,
+
+  // New ES6 way if both have the same name you can put the object name and it will take the same name as the variable.
+  openingHours,
 
   // Destructuring an object when recieved at the funtion
   orderDelivery: function ({
@@ -44,7 +52,13 @@ const restaurant = {
   },
 
   // Spread in functions
+  // Old way to create a function in the Object
   orderPasta: function (ing1, ing2, ing3) {
+    console.log(`Here is your pasta with ${ing1}, ${ing2} and ${ing3}`);
+  },
+
+  // New way to create a function in the object
+  orderPastaES6(ing1, ing2, ing3) {
     console.log(`Here is your pasta with ${ing1}, ${ing2} and ${ing3}`);
   },
 
@@ -298,5 +312,84 @@ rest2.owner &&= '<ANONYMOUS>';
 
 console.log(rest1);
 console.log(rest2);
+
+// 111- Looping arrays - for-of
+
+const menu = [...restaurant.starterMenu, ...restaurant.mainMenu];
+
+for (const item of menu) console.log(item);
+
+// Using standard way
+for (const item of menu.entries()) {
+  console.log(`${item[0] + 1}: ${item[1]}`);
+}
+
+// Destructuring the arry
+for (const [index, menuItem] of menu.entries()) {
+  console.log(`${index + 1}: ${menuItem}`);
+}
+
+// console.log(...menu.entries());
+
+// 112- Enhanced Object Literals
+console.log(restaurant.openingHours);
+
+restaurant.orderPastaES6('cheese', 'tomato');
+
+// 113- Optional chaining
+// Old style
+if (restaurant.openingHours.mon) {
+  console.log(restaurant.openingHours.mon.open);
+}
+
+// chaining
+console.log(restaurant.openingHours.mon?.open);
+
+// Example
+const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+for (const item of days) {
+  console.log(item);
+  const open = restaurant.openingHours[item]?.open ?? 'closed';
+  console.log(`We open on ${item} we open at: ${open}`);
+}
+
+// On Methods
+
+console.log(restaurant.order?.(0, 1) ?? 'Method does not exist');
+
+// Array
+// const users = [{ name: 'Daniel', email: 'lala' }];
+const users = [];
+
+console.log(users[0]?.name ?? 'User array empty');
+
+// 114- Looping Objects
+
+// Key Names
+const properties = Object.keys(openingHours);
+console.log(properties);
+
+let openStr = `We are open on ${properties.length} days: `;
+for (const day of properties) {
+  openStr += `${day}, `;
+}
+console.log(openStr);
+
+for (const day of Object.keys(openingHours)) {
+  console.log(day);
+}
+
+// Object Values
+const values = Object.values(openingHours);
+console.log(values);
+
+// Entire object
+const entries = Object.entries(openingHours);
+console.log(entries);
+
+for (const [key, { open, close }] of entries) {
+  console.log(`On the ${key} we are open ${open} and close ${close}`);
+}
 
 */
