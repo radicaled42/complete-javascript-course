@@ -67,6 +67,40 @@ const restaurant = {
   },
 };
 
+// 118- Maps Iteration
+
+const question = new Map([
+  ['question', 'something?'],
+  [1, 'C'],
+  [2, 'Javascript'],
+  [3, 'java'],
+  ['correct', 2],
+  [true, 'correct'],
+  [false, 'try again'],
+]);
+
+console.log(question);
+
+// Convert object to map
+console.log(Object.entries(openingHours));
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+console.log(question.get('question'));
+for (const [key, value] of question) {
+  // console.log(key, value);
+  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+}
+// const answer = Number(prompt('Your answer'));
+const answer = 2;
+console.log(answer);
+
+console.log(question.get(answer === question.get('correct')));
+
+// Convert Map to Array
+console.log([...question]);
+console.log([...question.keys()]);
+console.log([...question.values()]);
 /*
 
 // 103- Array Destructuring
@@ -391,5 +425,72 @@ console.log(entries);
 for (const [key, { open, close }] of entries) {
   console.log(`On the ${key} we are open ${open} and close ${close}`);
 }
+
+// 116- Sets
+// Unique elements no order
+const orderSet = new Set(['pasta', 'pizza', 'risotto', 'pasta', 'pizza']);
+console.log(orderSet);
+
+console.log(new Set('Daniel'));
+
+console.log(orderSet.length);
+console.log(orderSet.has('bread')); // You only need to use has, because all the values are unique and not in order
+console.log(orderSet.has('pizza'));
+orderSet.add('Garlic Bread');
+orderSet.add('Garlic Bread');
+console.log(orderSet);
+orderSet.delete('Garlic Bread');
+console.log(orderSet);
+
+for (const item of orderSet) console.log(item);
+
+// Example
+const staff = ['Waiter', 'Waiter', 'Waiter', 'Chef', 'Chef', 'Garson'];
+const staffUnique = new Set(staff);
+const staffUniqueArray = [...new Set(staff)];
+console.log(staffUnique);
+console.log(staffUnique.size);
+console.log(staffUniqueArray);
+
+console.log(new Set('DanielBianco').size);
+
+// 117- Maps
+
+// Maps values to keys and the keys can have any value.
+
+const rest = new Map();
+rest.set('name', "Bianco's"); // Set an element to the map
+rest.set(1, 'Florence, Italy');
+rest.set(2, 'Buenos Aires');
+
+console.log(rest);
+console.log(rest.set(3, 'Madrid'));
+rest
+  .set('categories', ['Italian', 'Pizzeria', 'Pasta'])
+  .set('Open', 11)
+  .set('close', 23)
+  .set(true, 'Open')
+  .set(false, 'Close');
+
+console.log(rest);
+console.log(rest.get('name')); // Get element from map
+console.log(rest.get(true));
+console.log(rest.get(1));
+
+const time = 21;
+console.log(rest.get(time > rest.get('open') && time < rest.get('close')));
+console.log(rest.has('categories'));
+
+rest.delete(2); // Remove element from Map
+
+// rest.clear(); Clear the Map
+console.log(rest);
+console.log(rest.size);
+
+// Use a higher object to set a key
+const arr = [1, 2];
+rest.set(arr, 'Test');
+
+console.log(rest.get(arr));
 
 */
