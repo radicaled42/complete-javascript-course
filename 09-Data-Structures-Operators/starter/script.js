@@ -67,40 +67,6 @@ const restaurant = {
   },
 };
 
-// 118- Maps Iteration
-
-const question = new Map([
-  ['question', 'something?'],
-  [1, 'C'],
-  [2, 'Javascript'],
-  [3, 'java'],
-  ['correct', 2],
-  [true, 'correct'],
-  [false, 'try again'],
-]);
-
-console.log(question);
-
-// Convert object to map
-console.log(Object.entries(openingHours));
-const hoursMap = new Map(Object.entries(openingHours));
-console.log(hoursMap);
-
-console.log(question.get('question'));
-for (const [key, value] of question) {
-  // console.log(key, value);
-  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
-}
-// const answer = Number(prompt('Your answer'));
-const answer = 2;
-console.log(answer);
-
-console.log(question.get(answer === question.get('correct')));
-
-// Convert Map to Array
-console.log([...question]);
-console.log([...question.keys()]);
-console.log([...question.values()]);
 /*
 
 // 103- Array Destructuring
@@ -492,5 +458,201 @@ const arr = [1, 2];
 rest.set(arr, 'Test');
 
 console.log(rest.get(arr));
+
+// 118- Maps Iteration
+
+const question = new Map([
+  ['question', 'something?'],
+  [1, 'C'],
+  [2, 'Javascript'],
+  [3, 'java'],
+  ['correct', 2],
+  [true, 'correct'],
+  [false, 'try again'],
+]);
+
+console.log(question);
+
+// Convert object to map
+console.log(Object.entries(openingHours));
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap);
+
+console.log(question.get('question'));
+for (const [key, value] of question) {
+  // console.log(key, value);
+  if (typeof key === 'number') console.log(`Answer ${key}: ${value}`);
+}
+// const answer = Number(prompt('Your answer'));
+const answer = 2;
+console.log(answer);
+
+console.log(question.get(answer === question.get('correct')));
+
+// Convert Map to Array
+console.log([...question]);
+console.log([...question.keys()]);
+console.log([...question.values()]);
+
+// 121- Strings - Part 1
+
+const airline = 'TAP Air Portugal';
+const plane = 'A320';
+
+console.log(plane[0]);
+console.log(plane[1]);
+console.log(plane[2]);
+
+console.log('B737'[0]);
+
+console.log(airline.length);
+console.log('B737'.length);
+
+console.log(airline.indexOf('r'));
+console.log(airline.lastIndexOf('r'));
+
+console.log(airline.indexOf('Portugal'));
+console.log(airline.indexOf('portugal'));
+
+console.log(airline.slice(4));
+console.log(airline.slice(4, 7));
+
+console.log(airline.slice(0, airline.indexOf(' ')));
+console.log(airline.slice(airline.indexOf(' ') + 1));
+
+console.log(airline.slice(-3));
+
+const checkMiddleSeat = function (seat) {
+  // B and E are middle seats
+  const s = seat.slice(-1);
+  if (s === 'B' || s === 'E') {
+    console.log('You got middle seat');
+  } else {
+    console.log('You are lucky');
+  }
+};
+
+checkMiddleSeat('11B');
+checkMiddleSeat('11E');
+checkMiddleSeat('2C');
+
+//122- Strings Part 2
+
+const airline = 'TAP Air Portugal';
+const plane = 'A320';
+
+//Changing the case
+
+console.log(airline.toLowerCase());
+console.log(airline.toUpperCase());
+
+const passenger = 'dAnIel';
+const passengerLower = passenger.toLowerCase();
+const passengerCorrect =
+  passengerLower[0].toUpperCase() + passengerLower.slice(1);
+console.log(passengerCorrect);
+
+const email = 'daniel.bianco@test.com';
+const loginEmail = '   daniel.BIANCO@teST.com  \n';
+
+const loginEmailLower = loginEmail.toLowerCase();
+const trimmedEmail = loginEmailLower.trim();
+
+console.log(trimmedEmail);
+
+const normalizedEmail = loginEmail.toLowerCase().trim();
+
+console.log(normalizedEmail);
+
+console.log(email === normalizedEmail);
+
+// Replacing
+const priceGB = '288,97£';
+const priceUS = priceGB.replace('£', '$').replace(',', '.');
+console.log(priceUS);
+
+const announcement = 'Something Something Something Dark Side';
+
+console.log(announcement.replace('Something', 'Else'));
+console.log(announcement.replace(/Something/g, 'Else'));
+
+// Booleans
+
+const plane2 = 'Airbus A320neo';
+console.log(plane2.includes('A320'));
+console.log(plane2.includes('Boing'));
+console.log(plane2.startsWith('Airb'));
+
+if (plane2.startsWith('Airbus') && plane2.endsWith('neo')) {
+  console.log('new plane');
+}
+
+const checkBaggage = function (items) {
+  const baggage = items.toLowerCase();
+
+  if (baggage.includes('knife') || baggage.includes('gun')) {
+    console.log('Out');
+  } else {
+    console.log('Welcome');
+  }
+};
+
+checkBaggage('Laptop, some food and pocket knife');
+checkBaggage('Socks and a camera');
+checkBaggage('Some snacks and gun for protection');
+
+// 123- Strings Part 3
+
+console.log('a+very+nice+place'.split('+'));
+console.log('Daniel Bianco'.split(' '));
+
+const [firstName, lastName] = 'Daniel Bianco'.split(' ');
+
+const newName = ['Mr.', firstName, lastName.toUpperCase()].join(' ');
+console.log(newName);
+
+const capitalizeName = function (name) {
+  const names = name.split(' ');
+  const namesUpper = [];
+
+  for (const n of names) {
+    // namesUpper.push(n[0].toUpperCase() + n.slice(1));
+    namesUpper.push(n.replace(n[0], n[0].toUpperCase()));
+  }
+
+  console.log(namesUpper.join(' '));
+};
+
+capitalizeName('daniel alejandro bianco');
+capitalizeName('pepito pepon');
+
+// Padding
+const message = 'Go to gate 23!';
+console.log(message.padStart(23, '+'));
+console.log('Daniel'.padStart(23, '+')); // You need to add the number of characters and x times the + until you get 23
+console.log('Daniel'.padEnd(23, '+'));
+
+const maskCreditCard = function (number) {
+  const str = number.toString();
+
+  const last = str.slice(-4);
+  // console.log(last);
+  return last.padStart(str.length, '*');
+};
+
+console.log(maskCreditCard(123456789123451));
+console.log(maskCreditCard(467864323567887));
+
+// Repeat
+const message2 = 'Bad Weather... All Departures Delayed...';
+console.log(message2.repeat(5));
+
+const planesInLine = function (n) {
+  console.log(
+    `There are ${n} planes in line ${'fuck '.toUpperCase().repeat(n)}`
+  );
+};
+
+planesInLine(5);
 
 */
