@@ -61,29 +61,6 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-// 147- Creating DOM Elements
-
-const displayMovements = function (movements) {
-  containerMovements.innerHTML = '';
-
-  movements.forEach(function (mov, i) {
-    const type = mov > 0 ? 'deposit' : 'withdrawal';
-
-    const html = `
-    <div class="movements__row">
-      <div class="movements__type movements__type--${type}">${
-      i + 1
-    } ${type}</div>
-      <div class="movements__value">${mov}€</div>
-    </div>
-    `;
-
-    containerMovements.insertAdjacentHTML('afterbegin', html);
-  });
-};
-
-displayMovements(account1.movements);
-
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -217,7 +194,7 @@ TEST DATA 1: Julia's data [3, 5, 2, 12, 7], Kate's data [4, 1, 15, 8, 3]
 TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
-*/
+
 
 // const juliaData = [3, 5, 2, 12, 7];
 // const kateData = [4, 1, 15, 8, 3];
@@ -252,3 +229,57 @@ const checkDogs = function (juliaData, kateData) {
 };
 
 checkDogs(juliaData, kateData);
+
+// 147- Creating DOM Elements
+
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+
+  movements.forEach(function (mov, i) {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${type}">${
+      i + 1
+    } ${type}</div>
+      <div class="movements__value">${mov}€</div>
+    </div>
+    `;
+
+    containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+
+displayMovements(account1.movements);
+
+*/
+
+//150- The Map method
+
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
+const euroToUsd = 1.1;
+// New method
+// const movementsUDS = movements.map(function (mov) {
+//   return Math.trunc(mov * euroToUsd);
+// });
+// New method using arrow functions
+const movementsUDS = movements.map(mov => Math.trunc(mov * euroToUsd));
+
+console.log(movements);
+console.log(movementsUDS);
+
+// Old Method
+const movementsUsdFor = [];
+for (const mov of movements) {
+  movementsUsdFor.push(mov * mov);
+}
+console.log(movementsUsdFor);
+
+const movementDescription = movements.map(
+  (mov, index) =>
+    `Movement ${index + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${mov}`
+);
+
+console.log(movementDescription);
