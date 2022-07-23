@@ -63,10 +63,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 // ###### FOR THE APPLICATION
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
 
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -97,9 +99,10 @@ const createUsername = function (accounts) {
 createUsername(accounts);
 // console.log(accounts);
 
-const calcPrintBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+const calcPrintBalance = function (account) {
+  account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
+  // account.balance = balance;
+  labelBalance.textContent = `${account.balance} EUR`;
 };
 
 // calcPrintBalance(account1.movements);
@@ -128,6 +131,17 @@ const calcDisplaySummary = function (account) {
 // displayMovements(account1.movements);
 // calcDisplaySummary(account1.movements);
 
+// Update UI
+
+const updateUI = function (account) {
+  // Display movements
+  displayMovements(account.movements);
+  // Display balance
+  calcPrintBalance(account);
+  // Display summary
+  calcDisplaySummary(account);
+};
+
 // 158 - LOGIN FUNCTIONALITY
 
 let currentAccount;
@@ -153,16 +167,92 @@ btnLogin.addEventListener('click', function (e) {
     // Clear the login input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    // Display movements
-    displayMovements(currentAccount.movements);
-    // Display balance
-    calcPrintBalance(currentAccount.movements);
-    // Display summary
-    calcDisplaySummary(currentAccount);
+
+    // Update UI
+    updateUI(currentAccount);
   } else {
     console.log('RETRY');
   }
   // console.log(currentAccount);
+});
+
+//159- Implementing Transfers
+btnTransfer.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const recieverAccount = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+
+  if (
+    amount > 0 &&
+    recieverAccount &&
+    currentAccount.balance >= amount &&
+    recieverAccount?.username !== currentAccount.username
+  ) {
+    // console.log('Valid Transfer');
+    currentAccount.movements.push(-amount);
+    recieverAccount.movements.push(amount);
+    // Update UI
+    updateUI(currentAccount);
+  }
+
+  // Clear the login input fields
+  inputTransferTo.value = inputTransferAmount.value = '';
+  // console.log(amount, recieverAccount);
+});
+
+// LOAN
+
+btnLoan.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // console.log('Approved');
+
+    // Add movement
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+
+    // Clear the close input fields
+    inputLoanAmount.value = '';
+  }
+});
+
+// 160- findIndex Method
+btnClose.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    // console.log('Delete');
+    const index = accounts.findIndex(acc => acc === currentAccount);
+    // console.log(index);
+    // console.log(accounts);
+    // Delete account
+    accounts.splice(index, 1);
+
+    // Clear the close input fields and Hide UI
+    inputCloseUsername.value = inputClosePin.value = '';
+    containerApp.style.opacity = 0;
+  }
+});
+
+let sorted = false;
+
+btnSort.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 
 /////////////////////////////////////////////////
@@ -571,4 +661,133 @@ const accountFunction = function (accounts) {
 const account11 = accountFunction(accounts);
 console.log(account11);
 
+// 161- Some and every
+console.log(movements);
+
+// SOME
+// CHECKS EQUALITY
+console.log(movements.includes(-130));
+
+// CHECKS CONDITION
+const anyDeposit = movements.some(mov => mov > 0);
+console.log(anyDeposit);
+
+// EVERY
+const everyDeposit = movements.every(mov => mov > 0);
+console.log(everyDeposit);
+
+const everyDeposit2 = account4.movements.every(mov => mov > 0);
+console.log(everyDeposit2);
+
+// Separate callback
+const deposit = mov => mov > 0;
+console.log(movements.some(deposit));
+console.log(movements.every(deposit));
+console.log(movements.filter(deposit));
+
+// 162- flat and flatMap
+
+// By default flat goes 1 level, you need to modify it.
+const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+console.log(arr.flat());
+
+const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+console.log(arrDeep.flat());
+console.log(arrDeep.flat(2));
+
+// Using different variables
+const accountMovements = accounts.map(acc => acc.movements);
+console.log(accountMovements);
+const allMovements = accountMovements.flat();
+console.log(allMovements);
+const overallBalance = allMovements.reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalance);
+
+// Using channing
+const overallBalanceChain = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalanceChain);
+
+// flatMap - its a combination of flat and map and goes only one level
+const overallBalanceMap = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(overallBalanceMap);
+
+//163- Sorting arrays
+
+const owners = ['Daniel', 'Pepe', 'Jose', 'Ari'];
+
+// sort mutates the array
+owners.sort();
+console.log(owners);
+
+// numbres
+console.log(movements);
+// Sort doesn't arrange a number array, only strings
+console.log(movements.sort());
+
+// To sort numbers you need to use the sort with variables and the function to compare
+// Ascending
+// Basic version
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (a < b) return -1;
+// });
+// Arrow version
+movements.sort((a, b) => a - b);
+console.log(movements);
+
+// Descending
+// Basic version
+// movements.sort((a, b) => {
+//   if (a > b) return -1;
+//   if (a < b) return 1;
+// });
+// Arrow version
+movements.sort((a, b) => b - a);
+console.log(movements);
+
 */
+
+// 164- More ways
+
+console.log([1, 2, 3, 4, 5, 6, 7]);
+
+const x = new Array(7);
+// console.log(x);
+// console.log(x.map(() => 5));
+
+// fills everything with 1
+// x.fill(1);
+
+// You can fill between specific indexes (number_you_want, index_1, index_2)
+x.fill(1, 3, 5);
+console.log(x);
+
+// Array.from its the same as new Array + fill
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (_curr, i) => i + 1);
+console.log(z);
+
+const randomValues = Array.from({ length: 100 }, (_curr, i) =>
+  Math.floor(Math.random() * i)
+);
+console.log(randomValues);
+
+// const movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+// console.log(movementsUI);
+
+labelBalance.addEventListener('click', function () {
+  const movementsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    el => Number(el.textContent.replace('€', ''))
+  );
+  console.log(movementsUI);
+
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')];
+});
