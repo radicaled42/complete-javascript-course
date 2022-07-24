@@ -614,7 +614,7 @@ console.log(acc1.getMovements());
 DATA CAR 1: 'Rivian' going at 120 km/h, with a charge of 23%
 
 GOOD LUCK 😀
-*/
+
 
 class CarCl {
   constructor(make, speed) {
@@ -682,3 +682,5 @@ prius.accelerate();
 prius.accelerate().break().break().chargeBattery(60).accelerate();
 
 console.log(prius.speedUS);
+
+*/
