@@ -22,7 +22,12 @@ const renderCountry = function (data, className = '') {
       </article>
       `;
   countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
+};
+
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('beforeend', msg);
+  // countriesContainer.style.opacity = 1;
 };
 
 /*
@@ -160,26 +165,188 @@ const getCountryData = function (country) {
 
 getCountryData('argentina');
 
-*/
+// 253. Chaining promises - 254. Rejected Promises - 255. Throwing errors manually
 
-// 253. Chaining promises
+// const getCountryData = function (country) {
+//   // Country 1
+//   fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then(
+//       response => {
+//         console.log(response);
+
+//         if (!response.ok)
+//           throw new Error(`Country not found (${response.status})`);
+
+//         return response.json();
+//       } // With response
+//       // error => alert(error) // With errors
+//     )
+//     .then(data => {
+//       renderCountry(data[0]);
+//       const neighbour = data[0].borders?.[0];
+//       // const neighbour = 'lalaland';
+
+//       if (!neighbour) return;
+
+//       // Country 2
+//       return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+//     })
+//     .then(response => {
+//       if (!response.ok)
+//         throw new Error(`Country not found (${response.status})`);
+
+//       return response.json();
+//       // error => alert(error)
+//     })
+//     // return getJson(`https://restcountries.com/v2/alpha/${neighbour}`, 'Some error 2')
+//     .then(data => renderCountry(data, 'neighbour'))
+//     .catch(error => {
+//       console.log(`There was an error: ${error}`);
+//       renderError(`Something went wrong ${error.message}. Try again`);
+//     }) // All errors can be handle with the catch method
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+const getJson = function (url, errorMessage = 'Something went wrong') {
+  return fetch(url).then(
+    response => {
+      // console.log(response);
+
+      if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
+
+      return response.json();
+    } // With response
+    // error => alert(error) // With errors
+  );
+};
 
 const getCountryData = function (country) {
   // Country 1
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => response.json())
+  getJson(`https://restcountries.com/v2/name/${country}`, 'Country not found')
     .then(data => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders?.[0];
+      const neighbour = data[0].borders?.[1];
+      // const neighbour = 'lalaland';
 
-      if (!neighbour) return;
+      if (!neighbour) throw new Error('No neighbour found');
 
       // Country 2
-      return fetch(`https://restcountries.com/v2/alpha/${neighbour}`);
+      return getJson(
+        `https://restcountries.com/v2/alpha/${neighbour}`,
+        'Country not found'
+      );
     })
-    .then(response => response.json())
-    .then(data => renderCountry(data, 'neighbour'));
+    .then(data => renderCountry(data, 'neighbour'))
+    .catch(error => {
+      console.log(`There was an error: ${error}`);
+      renderError(`Something went wrong ${error.message}. Try again`);
+    }) // All errors can be handle with the catch method
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
 };
 
-// getCountryData('argentina');
-getCountryData('germany');
+getCountryData('argentina');
+
+*/
+
+// btn.addEventListener('click', function () {
+//   getCountryData('australia');
+// });
+// getCountryData('jkhkhjkh');
+
+///////////////////////////////////////
+// Coding Challenge #1
+
+/* 
+In this challenge you will build a function 'whereAmI' which renders a country ONLY based on GPS coordinates. For that, you will use a second API to geocode coordinates.
+
+Here are your tasks:
+
+PART 1
+1. Create a function 'whereAmI' which takes as inputs a latitude value (lat) and a longitude value (lng) (these are GPS coordinates, examples are below).
+2. Do 'reverse geocoding' of the provided coordinates. Reverse geocoding means to convert coordinates to a meaningful location, like a city and country name. Use this API to do reverse geocoding: https://geocode.xyz/api.
+The AJAX call will be done to a URL with this format: https://geocode.xyz/52.508,13.381?geoit=json. Use the fetch API and promises to get the data. Do NOT use the getJSON function we created, that is cheating 😉
+3. Once you have the data, take a look at it in the console to see all the attributes that you recieved about the provided location. Then, using this data, log a messsage like this to the console: 'You are in Berlin, Germany'
+4. Chain a .catch method to the end of the promise chain and log errors to the console
+5. This API allows you to make only 3 requests per second. If you reload fast, you will get this error with code 403. This is an error with the request. Remember, fetch() does NOT reject the promise in this case. So create an error to reject the promise yourself, with a meaningful error message.
+
+PART 2
+6. Now it's time to use the received data to render a country. So take the relevant attribute from the geocoding API result, and plug it into the countries API that we have been using.
+7. Render the country and catch any errors, just like we have done in the last lecture (you can even copy this code, no need to type the same code)
+
+TEST COORDINATES 1: 52.508, 13.381 (Latitude, Longitude)
+TEST COORDINATES 2: 19.037, 72.873
+TEST COORDINATES 2: -33.933, 18.474
+
+GOOD LUCK 😀
+
+const getJson = function (url, errorMessage = 'Something went wrong') {
+  return fetch(url).then(
+    response => {
+      // console.log(response);
+
+      if (!response.ok) throw new Error(`${errorMessage} (${response.status})`);
+
+      return response.json();
+    } // With response
+    // error => alert(error) // With errors
+  );
+};
+
+// const whereAmI = function (lat, lng) {
+//   fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
+//     .then(response => {
+//       // console.log(response);
+//       if (!response.ok)
+//         throw new Error(`There was an error (${response.status})`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       // console.log(data);
+//       console.log(`You are in ${data.city}, ${data.country}`);
+//       return fetch(`https://restcountries.com/v2/name/${data.country}`);
+//     })
+//     .then(responseCountry => {
+//       if (!responseCountry.ok)
+//         throw new Error(
+//           `There was an error with the country API (${responseCountry.status})`
+//         );
+//       return responseCountry.json();
+//     })
+//     .then(data => renderCountry(data[0]))
+//     .catch(error => {
+//       console.log(`There was an error: ${error.message}`);
+//     })
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+const whereAmI = function (lat, lng) {
+  getJson(
+    `https://geocode.xyz/${lat},${lng}?geoit=json`,
+    'Error with the GeoLocation API'
+  )
+    .then(data => {
+      // console.log(data);
+      console.log(`You are in ${data.city}, ${data.country}`);
+      return getJson(
+        `https://restcountries.com/v2/name/${data.country}`,
+        'Error with the Country API'
+      );
+    })
+    .then(data => renderCountry(data[0]))
+    .catch(error => {
+      console.log(`There was an error: ${error.message}`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
+};
+
+whereAmI(19.037, 72.873);
+
+*/
