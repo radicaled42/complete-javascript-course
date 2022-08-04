@@ -61,15 +61,4 @@ export default class View {
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
-
-  addHandlerRender(handler) {
-    // Show a recipe with a hash change or in the load
-    // window.addEventListener('hashchange', handler);
-    // window.addEventListener('load', handler);
-
-    // This is the same as the previuos method, but instead of calling twice to window.addEventListener we created an array and loop over it
-    ['hashchange', 'load'].forEach(event =>
-      window.addEventListener(event, handler)
-    );
-  }
 }

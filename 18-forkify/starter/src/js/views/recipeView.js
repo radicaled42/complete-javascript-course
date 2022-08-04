@@ -7,6 +7,17 @@ class RecipeView extends View {
   _errorMessage = 'There was an error loading the recipe. Check the ID';
   _message = '';
 
+  addHandlerRender(handler) {
+    // Show a recipe with a hash change or in the load
+    // window.addEventListener('hashchange', handler);
+    // window.addEventListener('load', handler);
+
+    // This is the same as the previuos method, but instead of calling twice to window.addEventListener we created an array and loop over it
+    ['hashchange', 'load'].forEach(event =>
+      window.addEventListener(event, handler)
+    );
+  }
+
   _generateMarkup() {
     // console.log(this._data);
     return `
