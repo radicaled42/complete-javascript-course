@@ -87,12 +87,18 @@ export const updateServings = function (newServings) {
   state.recipe.servings = newServings;
 };
 
+const persistBookmars = function () {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
 export const addBookmark = function (recipe) {
   // Add Bookmakr
   state.bookmarks.push(recipe);
 
   // Mark the current bookmark
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+
+  persistBookmars();
 };
 
 export const deleteBookmark = function (id) {
@@ -101,4 +107,21 @@ export const deleteBookmark = function (id) {
 
   // remove the current bookmark
   if (id === state.recipe.id) state.recipe.bookmarked = false;
+
+  persistBookmars();
 };
+
+const init = function () {
+  const storage = localStorage.getItem('bookmarks');
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+init();
+// console.log(state.bookmarks);
+
+const clearBookmarks = function () {
+  localStorage.clear('bookmarks');
+};
+
+// Force clear the bookmark for testing. It will turned off
+// clearBookmarks();
