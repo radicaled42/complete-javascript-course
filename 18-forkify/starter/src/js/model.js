@@ -1,5 +1,5 @@
-import { API_URL, RES_PER_PAGE } from './config';
-import { getJSON } from './helpers';
+import { API_URL, RES_PER_PAGE, FORKIFY_KEY } from './config';
+import { AJAXRequest } from './helpers';
 
 export const state = {
   recipe: {},
@@ -12,23 +12,27 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${API_URL}${id}`);
+    const data = await AJAXRequest(`${API_URL}${id}?key=${FORKIFY_KEY}`);
 
     // console.log(res, data);
-
-    let { recipe } = data.data;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    state.recipe = createRecipeObject(data);
 
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
@@ -46,7 +50,9 @@ export const loadSearchResults = async function (query) {
     state.search.query = query;
 
     // https://forkify-api.herokuapp.com/api/v2/recipes?search=pizza
-    const data = await getJSON(`${API_URL}?search=${query}`);
+    const data = await AJAXRequest(
+      `${API_URL}?search=${query}&key=${FORKIFY_KEY}`
+    );
     // console.log(data);
 
     // all the recipes recieved
@@ -58,6 +64,7 @@ export const loadSearchResults = async function (query) {
         publisher: rec.publisher,
         sourceUrl: rec.source_url,
         image: rec.image_url,
+        ...(rec.key && { key: rec.key }),
       };
     });
 
@@ -125,3 +132,41 @@ const clearBookmarks = function () {
 
 // Force clear the bookmark for testing. It will turned off
 // clearBookmarks();
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    console.log(newRecipe);
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => entry[0].includes('ingredient') && entry[1] !== '')
+      .map(ingredient => {
+        // console.log(ingredient);
+        // const ingArr = ingredient[1].replaceAll(' ', '').split(',');
+        const ingArr = ingredient[1].split(',').map(el => el.trim());
+        if (ingArr.length !== 3)
+          throw new Error(
+            'Wrong ingredient format. Please use the correct format - QTY,UNT,DSC'
+          );
+        const [quantity, unit, description] = ingArr;
+        return { quantity: quantity ? +quantity : null, unit, description };
+      });
+
+    const recipe = {
+      id: newRecipe.id,
+      title: newRecipe.title,
+      publisher: newRecipe.publisher,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      servings: +newRecipe.servings,
+      cooking_time: +newRecipe.cookingTime,
+      ingredients,
+    };
+    console.log(recipe);
+
+    const data = await AJAXRequest(`${API_URL}?key=${FORKIFY_KEY}`, recipe);
+    // console.log(data);
+    state.recipe = createRecipeObject(data);
+    addBookmark(state.recipe);
+  } catch (err) {
+    throw err;
+  }
+};
